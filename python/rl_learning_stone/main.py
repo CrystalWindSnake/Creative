@@ -90,5 +90,5 @@ def menu():
   raise Exception()
 
 if __name__ == "__main__":
-  # menu()
-  display_cpu_table()
+  menu()
+  # display_cpu_table()
