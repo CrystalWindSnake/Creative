@@ -22,7 +22,7 @@ for g in class_group:
     display(g)
 
 #%% groupby 传入值
-df.groupby([1,1,2,2])
+df.groupby([1,1,1,2,2,2])
 
 
 #%% apply + np.mean
