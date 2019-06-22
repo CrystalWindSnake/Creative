@@ -103,6 +103,19 @@ def create_grade_pie(grade_values) -> Timeline:
         tl.add(pie, f'{g}年级')
     return tl
 
+def create_teach_bar(names,am_values,pm_values) -> Bar:
+    b = (
+        Bar()
+        .add_xaxis(names)
+        .add_yaxis('上午', am_values, stack="stack1",gap='0%')
+        .add_yaxis('下午',pm_values, stack="stack1",gap='0%')
+        .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title='教师课时数'),
+            datazoom_opts=opts.DataZoomOpts(type_='inside'),
+        )
+    )
+    return b
 
 #%% 语数英合并
 cond='语文 英语 数学'.split()
@@ -130,13 +143,29 @@ create_grade_pie(res).render(r'F:\写作\开发\python\src\Creative\python\excel
 
 #%% 
 res=(
-    df.groupby(['teach'],sort=True)
+    df.groupby(['teach','apm'],sort=True)
         .size()
         .reset_index()
 )
 res.columns.values[-1]='value'
-res.sort_values('value',ascending=False)
+res['total']=res.groupby('teach')['value'].transform('sum')
+res['rank']=res['total'].rank(ascending=False)
+res=res.sort_values(['rank','teach'])
 
-# pd.DataFrame.sort_values(ascending=)
+pd.DataFrame.gr
+res.iloc[50:80,:]
+
+#%%
+am_values=res.query('apm=="上午"')
+pm_values=res.query('apm=="下午"')
+
+(
+    create_teach_bar(am_values['teach'].values.tolist(),
+        am_values['value'].values.tolist(),
+        pm_values['value'].values.tolist())
+        .render(r'F:\写作\开发\python\src\Creative\python\excel_pandas\4\test.html')
+)
+
+
 
 #%%
