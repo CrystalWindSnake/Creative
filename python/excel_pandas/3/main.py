@@ -77,3 +77,4 @@ df=fillna(df)
 df=stack(df)
 df=split_content(df)
 
+df.to_csv('data.csv',index=False)
